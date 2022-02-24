@@ -23,7 +23,7 @@ const Register = props => {
             })
             .catch(error => {
                 setReturnedError(true);
-                setErrorMesasge(error);
+                setErrorMesasge("Connection with the server failed");
             });
     };
 
