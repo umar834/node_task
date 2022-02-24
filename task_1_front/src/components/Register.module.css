@@ -1,0 +1,16 @@
+.form 
+{
+    max-width: 650px;
+    margin: auto !important;
+    margin-top: 10% !important;
+    padding: 20px !important;
+    box-shadow: -1px 3px 5px 9px rgba(153,153,153,0.75);
+    -webkit-box-shadow: -1px 3px 5px 9px rgba(153,153,153,0.75);
+    -moz-box-shadow: -1px 3px 5px 9px rgba(153,153,153,0.75);
+}
+
+.form button 
+{
+    width: 200px;
+    height: 40px;
+}
