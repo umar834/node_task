@@ -44,18 +44,18 @@ router.get('/api/varify_email', (request, response) => {
 
     con.query(`SELECT * FROM users WHERE email= '${email}' AND hash='${hash}'`, function (err, result, fields) {
         if (err) throw err;
-        if (result && result.length > 0 ) {
-            var sql = `UPDATE users SET active=1 WHERE email= '${email}' AND hash='${hash}'` ;
+        if (result && result.length > 0) {
+            var sql = `UPDATE users SET active=1 WHERE email= '${email}' AND hash='${hash}'`;
             con.query(sql, function (err, result) {
                 if (err) throw err;
                 console.log('Acount Activated');
                 response.json({ status: "success", message: 'Activated' });
             });
         } else {
-            console.log('Invalid link provided');
-            response.json({ status: "error", message: 'Invalid link provided' });
+            console.log('Invalid email/hash provided');
+            response.json({ status: "error", message: 'Invalid email/hash provided' });
         }
-      });
+    });
 });
 
 router.get('/testlink', (request, response) => {
@@ -70,8 +70,7 @@ router.post('/api/register', (request, response) => {
     //save user information into database
     var sql = `INSERT INTO users (username, password, email, hash) VALUES ('${request.body.username}', '${request.body.password}', '${request.body.user.email}', '${hash}')`;
     con.query(sql, function (err, result) {
-        if (err)
-        {
+        if (err) {
             response.json({ status: "error", message: 'Failed to create an account' });
             throw err;
         };
@@ -98,6 +97,25 @@ router.post('/api/register', (request, response) => {
         } else {
             console.log('Email sent: ' + info.response);
             response.json({ status: "success", message: 'Mail sent' });
+        }
+    });
+});
+
+router.post('/api/login', (request, response) => {
+
+    //save user information into database
+    var sql = `SELECT * FROM users WHERE email= '${request.body.email}' AND password='${request.body.password}' AND active=1`;
+    con.query(sql, function (err, result) {
+        if (err) {
+            response.json({ status: "error", message: 'Failed to login. Internel Error' });
+            throw err;
+        };
+        if (result && result.length > 0) {
+            console.log('logged in');
+            response.json({ status: "success", message: 'logged in' });
+        } else {
+            console.log('Invalid email/password provided');
+            response.json({ status: "error", message: 'Invalid email/password provided' });
         }
     });
 });

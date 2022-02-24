@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Alert, Form, Input, Button } from 'antd';
+import { Alert } from 'antd';
 import 'antd/dist/antd.css';
 import { useState, useEffect } from 'react';
 import styles from './VarifyEmail.module.css';
