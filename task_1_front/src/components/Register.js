@@ -1,31 +1,42 @@
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Alert, Form, Input, Button } from 'antd';
 import 'antd/dist/antd.css';
 import styles from './Register.module.css';
 
 const Register = props => {
 
-    const [ returnedError, setReturnedError ] = useState(false);
+    const [returnedError, setReturnedError] = useState(false);
+    const [errorMessage, setErrorMesasge] = useState('');
+    const [returnedSuccess, setReturnedSuccess] = useState(false);
 
     const onFinish = (values) => {
-        // axios.post('http://localhost:3001/api/register', values)
-        //     .then(response => alert(response))
-        //     .catch(error => {
-        //         alert('There was an error!', error);
-        //     });
-        setReturnedError(true);
-        const timer = setTimeout(() => {
-            setReturnedError(false);
-        }, 3000);
+        axios.post('http://localhost:3001/api/register', values)
+            .then(response => {
+                if (response.data.status === "error") {
+                    setReturnedError(true);
+                    setErrorMesasge(response.data.message);
+                }
+                else if (response.data.status == "success") {
+                    setReturnedSuccess(true);
+                }
+            })
+            .catch(error => {
+                setReturnedError(true);
+                setErrorMesasge(error);
+            });
     };
 
     return (
         <div className={styles.container}>
-            { (returnedError) ?
-            <Alert className={styles.alert} message="Failed to create your account!" type="error" />
-            :
-            ''}
+            {(returnedError) ?
+                <Alert className={styles.alert} message={errorMessage} type="error" />
+                :
+                ''}
+            {(returnedSuccess) ?
+                <Alert className={styles.alert} message="Your account has been created. Please check your email to activate your account." type="success" />
+                :
+                ''}
             <Form className={styles.form}
                 initialValues={{ remember: true }}
                 onFinish={onFinish}

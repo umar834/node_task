@@ -37,7 +37,7 @@ app.use(function (req, res, next) {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-router.get('/email_varify', (request, response) => {
+router.get('/api/varify_email', (request, response) => {
     console.log(request.query);
     var email = request.query.email;
     var hash = request.query.hash;
@@ -49,9 +49,11 @@ router.get('/email_varify', (request, response) => {
             con.query(sql, function (err, result) {
                 if (err) throw err;
                 console.log('Acount Activated');
+                response.json({ status: "success", message: 'Activated' });
             });
         } else {
             console.log('Invalid link provided');
+            response.json({ status: "error", message: 'Invalid link provided' });
         }
       });
 });
@@ -68,12 +70,16 @@ router.post('/api/register', (request, response) => {
     //save user information into database
     var sql = `INSERT INTO users (username, password, email, hash) VALUES ('${request.body.username}', '${request.body.password}', '${request.body.user.email}', '${hash}')`;
     con.query(sql, function (err, result) {
-        if (err) throw err;
+        if (err)
+        {
+            response.json({ status: "error", message: 'Failed to create an account' });
+            throw err;
+        };
         console.log("saved to database");
     });
 
     //varification link
-    var var_link = 'http://localhost:3001/email_varify?email=' + request.body.user.email + '&hash=' + hash;
+    var var_link = 'http://localhost:3000/email_varify?email=' + request.body.user.email + '&hash=' + hash;
     //Mail options, subject, etc
     var mailOptions = {
         from: 'noreply@umaas.com',
@@ -88,10 +94,10 @@ router.post('/api/register', (request, response) => {
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
             console.log(error);
-            response.json({ message: 'Error. Mail not sent' });
+            response.json({ status: "error", message: 'Error. Mail not sent' });
         } else {
             console.log('Email sent: ' + info.response);
-            response.json({ message: 'Mail sent' });
+            response.json({ status: "success", message: 'Mail sent' });
         }
     });
 });

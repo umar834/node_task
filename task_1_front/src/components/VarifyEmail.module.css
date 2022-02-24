@@ -1,0 +1,12 @@
+.container 
+{
+    padding: 7%;
+    text-align: center;
+}
+
+.alert 
+{
+    max-width: 650px;
+    margin: auto;
+    margin-top: 5%;
+}
