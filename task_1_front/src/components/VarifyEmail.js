@@ -22,14 +22,17 @@ const VarifyEmail = props => {
             axios.get('http://localhost:3001/api/varify_email', { params })
                 .then(response => {
                     if (response.data.status === "error") {
+                        setReturnedSuccess(false);
                         setReturnedError(true);
                         setErrorMesasge(response.data.message);
                     }
                     else if (response.data.status == "success") {
+                        setReturnedError(false);
                         setReturnedSuccess(true);
                     }
                 })
                 .catch(error => {
+                    setReturnedSuccess(false);
                     setReturnedError(true);
                     setErrorMesasge("Connection with the server failed");
                 });

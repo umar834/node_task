@@ -14,14 +14,17 @@ const Register = props => {
         axios.post('http://localhost:3001/api/register', values)
             .then(response => {
                 if (response.data.status === "error") {
+                    setReturnedSuccess(false);
                     setReturnedError(true);
                     setErrorMesasge(response.data.message);
                 }
                 else if (response.data.status == "success") {
+                    setReturnedError(false);
                     setReturnedSuccess(true);
                 }
             })
             .catch(error => {
+                setReturnedSuccess(false);
                 setReturnedError(true);
                 setErrorMesasge("Connection with the server failed");
             });
