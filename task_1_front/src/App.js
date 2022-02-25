@@ -3,12 +3,25 @@ import {
   BrowserRouter as Router
 } from "react-router-dom";
 import RouterTop from './components/RouterTop';
+import { useState } from 'react';
+function App() {  
+  const templog = localStorage.getItem("loggedin");
+  if(typeof(templog) === 'undefined')
+  {
+    templog = false;
+  }
+  const [isLoggenIn, setIsLoggedIn] = useState(templog);
+  
 
-function App() {
+  const updateLoggedInInfo = (status) =>
+  {
+    setIsLoggedIn(status);
+  }
+
   return (
     <div>
       <Router>
-        <RouterTop />
+        <RouterTop loggedIn={isLoggenIn} updateLogin={updateLoggedInInfo} />
       </Router>
     </div>
   );

@@ -21,6 +21,9 @@ const Login = props => {
                 else if (response.data.status === "success") {
                     setReturnedError(false);
                     setReturnedSuccess(true);
+                    localStorage.setItem("token", response.data.token);
+                    localStorage.setItem("loggedin", true);
+                    props.updateLogin(true);
                 }
             })
             .catch(error => {

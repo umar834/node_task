@@ -148,10 +148,24 @@ router.post("/api/login", (request, response) => {
       });
       throw err;
     }
-    if (result && result.length > 0) {
-      console.log("logged in");
-      response.json({ status: "success", message: "logged in" });
-    } else {
+    //SUCCESSFULLY LOGGED IN
+    if (result && result.length > 0) 
+    {
+      const user = {
+        id: result[0].id,
+        username: result[0].username,
+        email: result[0].email
+      };
+
+      jwt.sign({user: user}, 'secretkey', (err, token) =>{
+        response.json({
+          status: "success",
+          token: token
+        });
+      });
+    } 
+    else 
+    {
       var sql = `SELECT * FROM users WHERE email= '${request.body.email}' AND password='${request.body.password}' AND active=0`;
       con.query(sql, function (err, result) {
         if (err) {
@@ -177,6 +191,22 @@ router.post("/api/login", (request, response) => {
   });
 });
 
+//Verify Token 
+function verifyToken(req, res,next)
+{
+  const bearerHeader = req.headers['authorization'];
+  if(typeof bearerHeader !== 'undefined')
+  {
+    const bearer = bearerHeader.split(' ');
+    const token = bearer[1];
+    req.token = token;
+    next();
+  }
+  else 
+  {
+    res.json({status : "error", message: "403 Forbidden"});
+  }
+}
 app.use("/", router);
 
 app.listen(3001, () => {
