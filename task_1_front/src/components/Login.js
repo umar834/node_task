@@ -23,6 +23,8 @@ const Login = props => {
                     setReturnedSuccess(true);
                     localStorage.setItem("token", response.data.token);
                     localStorage.setItem("loggedin", true);
+                    localStorage.setItem("username", response.data.user.username);
+                    localStorage.setItem("email", response.data.user.email);
                     props.updateLogin(true);
                 }
             })

@@ -160,7 +160,8 @@ router.post("/api/login", (request, response) => {
       jwt.sign({user: user}, 'secretkey', (err, token) =>{
         response.json({
           status: "success",
-          token: token
+          token: token,
+          user: user
         });
       });
     } 

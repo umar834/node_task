@@ -1,16 +1,35 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { Alert, Form, Input, Button } from 'antd';
+import { Alert, Form, Input, Button, Upload, message } from 'antd';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import ImgCrop from 'antd-img-crop';
 import 'antd/dist/antd.css';
 import styles from './Register.module.css';
 
 const Register = props => {
-
     const [returnedError, setReturnedError] = useState(false);
     const [errorMessage, setErrorMesasge] = useState('');
     const [returnedSuccess, setReturnedSuccess] = useState(false);
+    const [state, setState] = useState({
+        previewVisible: false,
+        previewImage: "",
+        fileList: []
+      });
 
+    const handleCancel = () => setState({ previewVisible: false });
+
+    const handlePreview = file => {
+        this.setState({
+          previewImage: file.thumbUrl,
+          previewVisible: true
+        });
+    };
+
+    const handleUpload = ({ fileList }) => {
+        setState({ fileList });
+    };
     const onFinish = (values) => {
+        values.append("file", state.fileList[0].originFileObj);
         axios.post('http://localhost:3001/api/register', values)
             .then(response => {
                 if (response.data.status === "error") {
@@ -29,6 +48,30 @@ const Register = props => {
                 setErrorMesasge("Connection with the server failed");
             });
     };
+    const handleSubmit = event => {
+        event.preventDefault();
+    
+        let formData = new FormData();
+        // add one or more of your files in FormData
+        // again, the original file is located at the `originFileObj` key
+        
+    
+        axios
+          .post("http://api.foo.com/bar", formData)
+          .then(res => {
+            console.log("res", res);
+          })
+          .catch(err => {
+            console.log("err", err);
+          });
+      };
+
+      const uploadButton = (
+        <div>
+          <PlusOutlined />
+          <div className="ant-upload-text">Upload</div>
+        </div>
+      );
 
     return (
         <div className={styles.container}>
@@ -63,6 +106,15 @@ const Register = props => {
                 <Form.Item name={['user', 'email']} rules={[{ type: 'email', required: true, message: 'Please enter a valid email!' }]}>
                     <Input placeholder='Email' />
                 </Form.Item>
+                <Upload
+                    listType="picture-card"
+                    fileList={state.fileList}
+                    onPreview={handlePreview}
+                    onChange={handleUpload}
+                    beforeUpload={() => false}
+                    >
+                    {uploadButton}
+                </Upload>
                 <Form.Item>
                     <Button type="primary" htmlType="submit" className="login-form-button">
                         Register
