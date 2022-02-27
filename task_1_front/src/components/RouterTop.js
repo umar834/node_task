@@ -13,6 +13,7 @@ import VarifyEmail from './VarifyEmail';
 import styles from '../app.module.css'
 import Dashboard from "./Dashboard";
 import axios from 'axios';
+import ForgotPassword from "./ForgotPassword";
 
 const RouterTop = props => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -44,6 +45,7 @@ const RouterTop = props => {
             </div>
             <Routes>
                 <Route path="/register" element={<Register />} />
+                <Route path="/forgotpassword" element={<ForgotPassword />} />
                 <Route path="/email_varify" element={<VarifyEmail email={searchParams.get('email')} hash={searchParams.get('hash')} />} />
                 {/* <Route path="/dashboard" element={<Dashboard />} /> */}
                 <Route path="/main" element={props.loggedIn ? <Dashboard /> : <Login loggedIn={props.loggedIn} updateLogin={props.updateLogin}/>}/>

@@ -1,18 +1,17 @@
 import axios from 'axios';
 import { Form, Input, Button, Alert } from 'antd';
 import 'antd/dist/antd.css';
-import styles from './Login.module.css';
+import styles from './ForgotPassword.module.css'
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 
-const Login = props => {
+const ForgotPassword = props => {
 
     const [returnedError, setReturnedError] = useState(false);
     const [errorMessage, setErrorMesasge] = useState('');
     const [returnedSuccess, setReturnedSuccess] = useState(false);
 
     const onFinish = (values) => {
-        axios.post('http://localhost:3001/api/login', values)
+        axios.post('http://localhost:3001/api/forgotpassword', values)
             .then(response => {
                 if (response.data.status === "error") {
                     setReturnedSuccess(false);
@@ -22,14 +21,6 @@ const Login = props => {
                 else if (response.data.status === "success") {
                     setReturnedError(false);
                     setReturnedSuccess(true);
-                    localStorage.setItem("token", response.data.token);
-                    localStorage.setItem("loggedin", true);
-                    localStorage.setItem("username", response.data.user.username);
-                    localStorage.setItem("email", response.data.user.email);
-                    localStorage.setItem("image", response.data.user.image);
-                    localStorage.setItem("user_id", response.data.user.id);
-                    localStorage.setItem("password", response.data.user.password);
-                    props.updateLogin(true);
                 }
             })
             .catch(error => {
@@ -46,40 +37,28 @@ const Login = props => {
                 :
                 ''}
             {(returnedSuccess) ?
-                <Alert className={styles.alert} message="Logged In" type="success" />
+                <Alert className={styles.alert} message="Reset password link has been sent to the email" type="success" />
                 :
                 ''}
             <Form className={styles.form}
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
             >
-                <h2>Log In</h2>
+                <h2>Enter your email address</h2>
                 <Form.Item
                     name="email"
                     rules={[{type: 'email', required: true, message: 'Please input a valid Email!' }]}
                 >
                     <Input placeholder="Email" />
                 </Form.Item>
-                <Form.Item
-                    name="password"
-                    rules={[{ required: true, message: 'Please input your Password!' }]}
-                >
-                    <Input
-                        type="password"
-                        placeholder="Password"
-                    />
-                </Form.Item>
                 <Form.Item>
                     <Button type="primary" htmlType="submit" className="login-form-button">
-                        Log In
+                        Send Link
                     </Button>
-                    <br />
-                    <br />
-                    <Link className={styles.link} to="/forgotpassword">Forgot Password?</Link>
                 </Form.Item>
             </Form>
         </div>
     );
 }
 
-export default Login;
+export default ForgotPassword;

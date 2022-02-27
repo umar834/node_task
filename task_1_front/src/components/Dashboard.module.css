@@ -18,3 +18,12 @@
 {
     margin-top: 50px;
 }
+
+.button 
+{
+    margin-top: 0px !important;
+}
+
+.alert {
+    margin-bottom: 20px;
+}
